@@ -3,7 +3,7 @@ import axios from 'axios';
 import { UploadCloud, Zap, BrainCircuit, Activity, X, Trophy, Swords, User, Image as ImageIcon } from 'lucide-react';
 import './index.css';
 
-const API_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3500';
+const API_URL = import.meta.env.VITE_API_BASE_URL || 'http://72.60.37.180:3500';
 
 function App() {
   const [appMode, setAppMode] = useState('vision'); // 'vision' or 'match'
