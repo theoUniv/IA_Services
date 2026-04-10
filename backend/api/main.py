@@ -11,6 +11,7 @@ from pydantic import BaseModel, Field
 
 from core.inference import predicteur
 from core.llm import analyser_image_llm
+from core.match_inference import match_predictor
 
 logger = logging.getLogger("api.tennis")
 
@@ -38,12 +39,31 @@ class ReponseErreur(BaseModel):
     detail: str = Field(..., description="Message d'erreur détaillé.")
 
 
+class MatchRequest(BaseModel):
+    joueur_1: str = Field(..., description="Nom exact du joueur 1 (ex: 'Federer R.')")
+    joueur_2: str = Field(..., description="Nom exact du joueur 2 (ex: 'Nadal R.')")
+    surface: str = Field("Hard", description="Surface de jeu (Hard, Clay, Grass, Carpet)")
+
+class MatchResponse(BaseModel):
+    joueur_1: str
+    joueur_2: str
+    surface: str
+    rank_1_actuel: float
+    rank_2_actuel: float
+    win_rate_1_lisse: float
+    win_rate_2_lisse: float
+    gagnant_predit: str
+    probabilite_j1: float
+    probabilite_j2: float
+
+
 @asynccontextmanager
 async def lifespan(_app: FastAPI) -> AsyncIterator[None]:
     """Charge le modèle au démarrage et libère les ressources à l'arrêt."""
     logger.info("Chargement du modèle de classification tennis...")
     try:
         predicteur.charger_modele()
+        match_predictor.charger_modele()
         logger.info("Modèle chargé avec succès.")
     except (FileNotFoundError, RuntimeError) as exc:
         logger.error("Échec du chargement du modèle : %s", exc)
@@ -173,3 +193,23 @@ async def predire_vision_llm(fichier: UploadFile = File(...)) -> ReponsePredicti
 async def health_check() -> dict[str, str]:
     """Retourne un statut OK si le serveur est opérationnel."""
     return {"status": "ok"}
+
+@app.post(
+    "/predict/match",
+    response_model=MatchResponse,
+    summary="Prédire le gagnant d'un match de tennis ATP",
+    description="Prend 2 noms de joueurs exacts et une surface, gènere les stats depuis l'historique et retourne le gagnant.",
+)
+async def predire_match(request: MatchRequest) -> MatchResponse:
+    try:
+        res = match_predictor.predire_match(
+            nom_joueur_1=request.joueur_1, 
+            nom_joueur_2=request.joueur_2, 
+            surface_choisie=request.surface
+        )
+        return MatchResponse(**res)
+    except ValueError as exc:
+        raise HTTPException(status_code=404, detail=str(exc))
+    except Exception as exc:
+        logger.error("Erreur prédiction match: %s", exc)
+        raise HTTPException(status_code=500, detail=str(exc))
