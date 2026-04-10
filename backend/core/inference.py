@@ -44,6 +44,13 @@ class PredicteurTennis:
             )
 
         try:
+            import keras
+            original_init = keras.layers.Dense.__init__
+            def new_init(self, *args, **kwargs):
+                kwargs.pop("quantization_config", None)
+                original_init(self, *args, **kwargs)
+            keras.layers.Dense.__init__ = new_init
+
             self._modele = tf.keras.models.load_model(str(chemin))
         except Exception as exc:
             raise RuntimeError(

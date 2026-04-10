@@ -10,6 +10,7 @@ from fastapi import FastAPI, File, HTTPException, UploadFile
 from pydantic import BaseModel, Field
 
 from core.inference import predicteur
+from core.llm import analyser_image_llm
 
 logger = logging.getLogger("api.tennis")
 
@@ -60,6 +61,15 @@ app = FastAPI(
     ),
     version="1.0.0",
     lifespan=lifespan,
+)
+
+from fastapi.middleware.cors import CORSMiddleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 TYPES_MIME_AUTORISES: set[str] = {
@@ -137,6 +147,23 @@ async def predire_vision(
         confiance=resultat["confiance"],
     )
 
+@app.post("/predict/llm", response_model=ReponsePrediction)
+async def predire_vision_llm(fichier: UploadFile = File(...)) -> ReponsePrediction:
+    if fichier.content_type not in TYPES_MIME_AUTORISES:
+        raise HTTPException(status_code=400, detail="Type de fichier non supporté.")
+    try:
+        contenu: bytes = await fichier.read()
+    except Exception as exc:
+        raise HTTPException(status_code=400, detail="Impossible de lire le fichier uploadé.") from exc
+    finally:
+        await fichier.close()
+    if not contenu:
+        raise HTTPException(status_code=400, detail="Le fichier uploadé est vide.")
+    try:
+        resultat = await analyser_image_llm(contenu)
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail="Erreur interne lors de la prédiction LLM.") from exc
+    return ReponsePrediction(classe=resultat["classe"], confiance=resultat["confiance"])
 
 @app.get(
     "/health",
