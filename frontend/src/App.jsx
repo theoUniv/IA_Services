@@ -4,7 +4,7 @@ import { UploadCloud, Zap, BrainCircuit, Activity, X } from 'lucide-react';
 import './index.css';
 
 // Utilisez le port dynamique pour Docker Compose
-const API_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+const API_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3500';
 
 function App() {
   const [method, setMethod] = useState('vision'); // 'vision' or 'llm'

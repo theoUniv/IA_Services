@@ -6,7 +6,7 @@ services:
       context: ./backend
       dockerfile: Dockerfile
     ports:
-      - "8000:8000"
+      - "3500:3500"
     volumes:
       - ./backend/models:/app/models
     env_file:
@@ -19,6 +19,6 @@ services:
     ports:
       - "3000:3000"
     environment:
-      - VITE_API_BASE_URL=http://localhost:8000
+      - VITE_API_BASE_URL=http://72.60.37.180:3500
     depends_on:
       - backend
