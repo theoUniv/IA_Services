@@ -24,6 +24,6 @@ Normalement, **pas besoin de se prendre la tête**, nous avons tout mis dans le 
 Après ça, le site tourne sur [http://localhost:3000](http://localhost:3000) (ou 5173 parfois s'il y a un conflit de port).
 
 ## Ce que ça fait
-- Vous avez une zone de **Drag & Drop** pour uploader l'image du joueur.
-- Vous pouvez choisir si vous voulez faire la prédiction avec le **Modèle Keras/TensorFlow** qu'on a entraîné, ou bien tester avec l'**API externe OpenRouter** (LLM).
-- Ça fait un appel vers le backend (qui tourne sur le port 8000), et ça vous affiche une belle jauge avec le score de confiance.
+- **Analyse d'image** : Vous avez une zone de **Drag & Drop** pour uploader l'image du joueur. Vous pouvez choisir si vous voulez faire la prédiction avec le **Modèle Keras/TensorFlow** qu'on a entraîné, ou bien tester avec l'**API externe OpenRouter** (LLM). Ça vous affiche une belle jauge avec le score de confiance.
+- **Prédiction de Match** : Dans le deuxième onglet, vous pouvez simuler un match entre deux joueurs de l'ATP. On utilise alors un moteur de stats historiques pour prédire qui va gagner !
+- Ça fait un appel vers le backend (qui tourne sur le port 3500 via Docker), et l'interface s'occupe de tout vous afficher.

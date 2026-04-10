@@ -259,6 +259,99 @@ header p {
   animation: shake 0.5s;
 }
 
+.mode-selector-main {
+  display: flex;
+  background: rgba(255, 255, 255, 0.03);
+  padding: 0.5rem;
+  border-radius: 14px;
+  border: 1px solid var(--border-color);
+  margin-bottom: 1rem;
+}
+
+.main-tab {
+  flex: 1;
+  padding: 0.75rem;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-weight: 600;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: all 0.2s ease;
+}
+
+.main-tab.active {
+  background: var(--accent);
+  color: #000;
+}
+
+.fade-in {
+  animation: fadeIn 0.4s ease;
+}
+
+.close-btn {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: rgba(0,0,0,0.5);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  padding: 5px;
+  cursor: pointer;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.input-group {
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  padding: 0.75rem;
+  transition: border-color 0.2s;
+}
+
+.input-group:focus-within {
+  border-color: var(--accent);
+}
+
+.input-group input {
+  background: transparent;
+  border: none;
+  color: white;
+  width: 100%;
+  font-size: 1rem;
+  outline: none;
+}
+
+.surface-select {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  padding: 0.75rem;
+  color: white;
+  font-size: 1rem;
+  cursor: pointer;
+  outline: none;
+}
+
+.surface-select:focus {
+  border-color: var(--accent);
+}
+
+.surface-select option {
+  background: var(--bg-dark);
+}
+
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
