@@ -8,8 +8,10 @@ import logging
 
 logger = logging.getLogger("api.match")
 
-MODEL_PATH = Path("c:/Users/cloep/0Code/DL/tennis/models/tennis_model.h5")
-CSV_PATH = Path("c:/Users/cloep/0Code/DL/tennis/models/atp_tennis.csv")
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+MODEL_PATH = BASE_DIR / "models" / "tennis_model.h5"
+CSV_PATH = BASE_DIR / "models" / "atp_tennis.csv"
 
 class MatchPredictor:
     def __init__(self):
@@ -28,10 +30,10 @@ class MatchPredictor:
             except Exception as e:
                 logger.error(f"Erreur chargement modèle h5: {e}")
                 # Fallback sur le keras s'il existe
-                fallback_path = Path("c:/Users/cloep/0Code/DL/tennis/backend/models/tennis_model.keras")
+                fallback_path = BASE_DIR / "models" / "tennis_model.keras"
                 if fallback_path.exists():
                     self.model = tf.keras.models.load_model(str(fallback_path))
-                    logger.info(f"Modèle de match fallback keras chargé")
+                    logger.info(f"Modèle de match fallback keras chargé depuis {fallback_path}")
                 else:
                     raise FileNotFoundError(f"Modèle de match introuvable: {e}")
 
